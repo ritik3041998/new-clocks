@@ -1,0 +1,11 @@
+Sample rate (fs) : 1000.0 Hz  (Ts = 1.0000 ms)
+Total samples    : 8349
+Frame duration   : 8.3490 s  (0.1198 Hz frame rate)
+Total pixels     : 256
+Total lines      : 16  (16.00 pixels/line)
+
+Intra-line pixel spacing (samples):
+  min=24  max=31  mean=26.73
+
+Line-turnaround gap (samples):
+  min=44  max=133  mean=91.80

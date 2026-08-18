@@ -1,0 +1,15 @@
+Source lines file : 16x16_square_Pattern/16x16_lines.csv
+Source meas file  : 16x16_square_Pattern/meas_pts_16x.csv
+Sample rate (fs)  : 1000.0 Hz  (Ts = 1.0000 ms)
+Total samples     : 8349
+Frame duration    : 8.3490 s  (0.1198 Hz frame rate)
+Total pixels      : 256
+Total lines       : 16  (16.00 pixels/line avg)
+
+Intra-line pixel spacing (samples):
+  min=30  max=30  mean=30.00
+  -> dwell time min=30.000 ms, max=30.000 ms
+
+Line-turnaround (flyback) gap (samples):
+  min=42  max=44  mean=43.87
+  -> flyback time min=42.000 ms, max=44.000 ms
