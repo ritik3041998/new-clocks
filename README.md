@@ -8,6 +8,64 @@ to counteract keystone/pincushion distortion from a tilted NLOS wall).
 
 ---
 
+## 0. Quickstart — generate clocks for a NEW pattern
+
+Two situations. Pick the one that matches what you have.
+
+### You have a real `meas_pts.csv` (exact — use this whenever possible)
+
+```bash
+python generate_sync_clocks.py \
+    --lines your_new_lines.csv \
+    --meas your_new_meas_pts.csv \
+    --fs 1000 \
+    --out my_new_pattern_out
+```
+
+- `--lines` — 2-column `x,y` galvo voltage CSV, no header
+- `--meas` — matching pixel-flag CSV, same row count/order (`0,0` = not a pixel, nonzero = pixel)
+- `--fs` — your DAC sample rate in Hz
+- `--out` — output folder
+
+Optional: `--points-per-line 32` (force pixels/line instead of auto-detect),
+`--gap-factor 1.3` (line-boundary detection sensitivity), `--settle-delay-samples 5`
+(delay `pixel_clk` past galvo settling).
+
+### You only have the trajectory (`lines.csv`), no `meas_pts.csv` yet
+
+```bash
+# Step 1 — place pixels on the trajectory
+python equal_spacing_from_trajectory.py \
+    --lines your_new_lines.csv \
+    --n-lines 16 \
+    --points-per-line 16 \
+    --out my_new_pattern_eq
+
+# Step 2 — build the clock timeline + trajectory visualization
+python clocks_from_equal_spacing.py \
+    --lines your_new_lines.csv \
+    --pixels my_new_pattern_eq/equal_spaced_pixels.csv \
+    --fs 1000 \
+    --out my_new_pattern_clk \
+    --title "my_new_pattern"
+```
+
+Set `--n-lines`/`--points-per-line` to your grid size (e.g. `32 32`). Works
+unchanged for both a direct/uniform scan and a corrected/trapezoidal scan —
+step 1's curvature detection and step 2's velocity-based duration scaling
+handle the trapezoid automatically, no extra flags needed.
+
+Tuning knobs for step 1 if line detection struggles: `--straight-percentile 92`
+(raise if lines merge/split incorrectly), `--smooth-window 5` (curvature
+smoothing), `--compare-meas ground_truth.csv` (optional accuracy check
+against a real flag file, if you have one).
+
+**Always sanity-check** the `*_check.png` / `*_trajectory.png` output —
+every line should show full point coverage with no gaps — before trusting
+the clock timing that gets built from it.
+
+---
+
 ## 1. The data model
 
 Every pattern is described by two parallel, sample-aligned CSVs (no header,
